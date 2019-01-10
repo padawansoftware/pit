@@ -1,0 +1,87 @@
+function __pit_path()
+{
+    local path_commands=(
+        list
+        find
+        add
+        edit
+        rm
+    )
+
+    if  [ $cword -eq 2 ]; then
+        for command in $(compgen -W "${path_commands[*]}" $cur); do
+            COMPREPLY+=($command)
+        done
+    else
+        case ${words[2]} in
+            "find")
+                for path in $(compgen -W "$(pit path list -n)" ${words[3]}); do
+                    COMPREPLY+=($path)
+                done
+                ;;
+            "add")
+                if [ $cword -eq 4 ]; then
+                    _longopt
+                fi
+                ;;
+            "edit")
+                if [ $cword -eq 3 ]; then
+                    COMPREPLY=( $(compgen -W "$(pit path list -n)" ${words[3]}) )
+                else
+                    _longopt
+                fi
+                ;;
+            "rm")
+                    COMPREPLY=( $(compgen -W "$(pit path list -n)" ${words[3]}) )
+                ;;
+        esac
+    fi
+}
+
+function __pit_cmd()
+{
+    local cmd_commands=(
+        list
+        add
+        edit
+        rm
+    )
+
+    [ $cword -eq 2 ] && COMPREPLY=( $(compgen -W "${cmd_commands[*]}" $cur) ) && return 0;
+    case ${words[2]} in
+        "edit"|"rm")
+            COMPREPLY=( $(compgen -W "$(pit cmd list)" ${words[3]}) )
+            ;;
+    esac
+}
+
+function __pit_exec()
+{
+    COMPREPLY=( $(compgen -W "$(pit cmd list)" ${words[2]}) )
+}
+
+function __pit_pit()
+{
+    local commands=(path cmd exec)
+
+    local cmd_commands=(
+        list
+        add
+        edit
+        rm
+    )
+
+    local cur prev words cword
+    _get_comp_words_by_ref cur prev words cword
+
+    if  [ $cword -eq 1 ]; then
+        for command in $(compgen -W "${commands[*]}" $cur); do
+            COMPREPLY+=($command)
+        done
+    else
+        local completion_function=__pit_${words[1]}
+        $completion_function
+    fi
+}
+
+complete -F __pit_pit pit

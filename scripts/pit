@@ -1,0 +1,11 @@
+#!/bin/bash
+
+COMMANDS_DIR=/usr/share/pit/commands
+
+# Check pit is installed
+[ $(command -v pit) ] || exit 1;
+
+# Include commands
+for cmd in $(find ${COMMANDS_DIR}/*); do
+    source $cmd
+done;

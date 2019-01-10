@@ -1,0 +1,24 @@
+# Add command
+function cd() {
+    if [ $# -gt 0 ]; then
+        path=$(pit path find $1);
+
+        if [ $path ]; then command cd $path; return 0; fi
+    fi
+    command cd $*
+}
+
+function __cd_pit()
+{
+    local cur prev words cword
+    _get_comp_words_by_ref cur prev words cword
+
+    # Get cd results and get paths
+    _cd
+    local paths=$(pit path list -n);
+    for path in $(compgen -W "$paths" $cur); do
+        COMPREPLY+=($path)
+    done;
+}
+
+complete -F __cd_pit cd
