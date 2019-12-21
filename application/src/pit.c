@@ -1,18 +1,18 @@
-#include "command.h"
-#include "directory.h"
-#include "common.h"
-#include "error.h"
-
-// Commands
-#include "path.h"
-#include "cmd.h"
-#include "exec.h"
-
 // Sytem Libraries
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+
+#include "common/command.h"
+#include "common/common.h"
+#include "common/directory.h"
+#include "common/error.h"
+
+// Commands
+#include "path.h"
+#include "cmd.h"
+#include "exec.h"
 
 // Registered commands
 static cmd commands[] = {
@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
         pit_init();
 
         // Execute the command
-        struct cmd_struct *command = getCommand(argv[1], commands);
+        struct cmd_struct *command = get_command(argv[1], commands);
         if (command && command->init()) {
             argc -= 2;
             argv += 2;
