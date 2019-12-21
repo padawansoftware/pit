@@ -47,6 +47,21 @@ void printd(const char path[]);
  */
 array* ls(const char path[]);
 
+/**
+ * Get the current binary directory
+ *
+ * @return char* Path to the current binary directory
+ */
+char* get_bin_dir();
+
+/**
+ * Get the current binary path
+ *
+ * @return char* Path to the current binary
+ */
+char* get_bin_path();
+
+
 #define create_dir mkdir(path, mode);
 #define _create_dir(path) mkdir(path, 0700)
 
