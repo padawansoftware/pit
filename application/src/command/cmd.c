@@ -58,6 +58,8 @@ int cmd_init(void) {
     }
 
     // TODO Check there is an editor installed
+
+    return true;
 }
 
 
