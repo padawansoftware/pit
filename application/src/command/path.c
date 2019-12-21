@@ -1,9 +1,3 @@
-#include "path.h"
-#include "command.h"
-#include "directory.h"
-#include "error.h"
-#include "common.h"
-#include "array.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -12,6 +6,13 @@
 #include <dirent.h>
 #include <getopt.h>
 #include <string.h>
+
+#include "path.h"
+#include "array.h"
+#include "common/common.h"
+#include "common/command.h"
+#include "common/directory.h"
+#include "common/error.h"
 
 typedef struct str_path {
     // path name
@@ -57,7 +58,7 @@ static cmd subcommands[] = {
 
 int path_cmd(int argc, char **argv) {
     if(argc) {
-        cmd *subcommand = getCommand(argv[0], subcommands);
+        cmd *subcommand = get_command(argv[0], subcommands);
         if(subcommand) {
             subcommand->run(--argc, ++argv);
 

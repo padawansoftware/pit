@@ -1,37 +1,50 @@
 #ifndef _DIRECTORY_H
 #define _DIRECTORY_H
 
-#include "array.h"
-
 #include <sys/stat.h>
-#include <stdbool.h>
 #include <unistd.h>
+#include <string.h>
+#include <stdbool.h>
+
+#include "array.h"
 
 void init_pit_directory(void);
 
 /**
  *  @return
- *      true on dir_exists
- *      errno on error
+ *      true if directory exists
+ *      false if directory does not exists
  */
-int dir_exists(const char path[]);
+bool dir_exists(const char path[]);
 
 /**
  *  @return
- *      true on file_exists
- *      false on error or not existing file
+ *      true if file_exists
+ *      false if error or not existing file
  */
-int file_exists(const char path[]);
+bool file_exists(const char path[]);
 
 /**
  *  @return
- *      0 on success
- *      errno on error
+ *      0 if success
+ *      errno if error
  */
 int create_file(const char path[]);
 
-int printd(const char path[]);
+/**
+ * Prints directory content
+ *
+ * @param path Path to the directory
+ */
+void printd(const char path[]);
 
+/**
+ * Get directory content
+ *
+ * @param path Path to the directory
+ *
+ * @return array* An array of char*, each one
+ */
 array* ls(const char path[]);
 
 #define create_dir mkdir(path, mode);

@@ -1,18 +1,19 @@
-#include "common.h"
-#include "error.h"
-#include "directory.h"
-
 #include <dirent.h>
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdbool.h>
+
+#include "array.h"
+#include "common/common.h"
+#include "common/error.h"
+#include "common/directory.h"
 
 // Private functions
 static int sort(const void *, const void*);
 
-
-int dir_exists(const char path[]) {
+bool dir_exists(const char path[]) {
     DIR* dir;
     if ((dir = opendir(path))) {
         closedir(dir);
@@ -20,10 +21,33 @@ int dir_exists(const char path[]) {
         return true;
     }
 
+    return false;
+}
+
+bool file_exists(const char path[]) {
+    FILE *file;
+    if ((file = fopen(path, "r")))
+    {
+        fclose(file);
+
+        return true;
+    }
+
+    return false;
+}
+
+int create_file(const char path[]) {
+    FILE *file;
+    if(file = fopen(path, "a+")) {
+        fclose(file);
+
+        return 0;
+    }
+
     return errno;
 }
 
-int printd(const char path[]) {
+void printd(const char path[]) {
     array *elements = ls(path);
 
     char *element;
@@ -34,8 +58,6 @@ int printd(const char path[]) {
     }
 
     printf("\n");
-
-    return 0;
 }
 
 array* ls(const char path[]) {
@@ -59,27 +81,4 @@ array* ls(const char path[]) {
 
 static int sort(const void *a, const void *b) {
     return strcmp(*(const char**)a, *(const char**)b);
-}
-
-int file_exists(const char path[]) {
-    FILE *file;
-    if ((file = fopen(path, "r")))
-    {
-        fclose(file);
-
-        return true;
-    }
-
-    return false;
-}
-
-int create_file(const char path[]) {
-    FILE *file;
-    if(file = fopen(path, "a+")) {
-        fclose(file);
-
-        return 0;
-    }
-
-    return errno;
 }

@@ -1,9 +1,10 @@
-SRCS = $(wildcard src/*.c src/command/*.c lib/*.c)
-INSTALL = /usr/local/bin/
+SRCS = $(wildcard src/pit.c src/command/*.c src/common/*.c lib/*.c)
+LIBS = -I src/ -I src/command/ -I lib/
+INSTALL = /usr/share/pit/
 FLAGS =  -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion
 
 make:
-	gcc -g $(SRCS) -I src/ -I src/command/ -I lib/ -o bin/pit -D _GNU_SOURCE
+	gcc -g $(SRCS) $(LIBS) -o bin/pit -D _GNU_SOURCE
 
 all: make install
 

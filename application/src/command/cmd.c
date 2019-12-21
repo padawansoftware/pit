@@ -1,11 +1,11 @@
-#include "cmd.h"
-#include "command.h"
-#include "common.h"
-#include "directory.h"
-#include "error.h"
-
 #include <string.h>
 #include <errno.h>
+
+#include "cmd.h"
+#include "common/command.h"
+#include "common/common.h"
+#include "common/directory.h"
+#include "common/error.h"
 
 int cmd_list_cmd(int argc, char **argv);
 int cmd_add_cmd(int argc, char **argv);
@@ -30,7 +30,7 @@ int cmd_cmd(int argc, char **argv) {
     if (argc) {
         cmd_init();
 
-        cmd *subcommand = getCommand(argv[0], subcommands);
+        cmd *subcommand = get_command(argv[0], subcommands);
         if(subcommand) {
             subcommand->run(--argc, ++argv);
 

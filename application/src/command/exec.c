@@ -1,9 +1,10 @@
-#include "cmd.h"
-#include "directory.h"
-#include "error.h"
-#include "command.h"
-
 #include <stdlib.h>
+
+#include "cmd.h"
+#include "common/command.h"
+#include "common/directory.h"
+#include "common/error.h"
+
 
 int exec_cmd(int argc, char **argv) {
     if (argc > 0) {

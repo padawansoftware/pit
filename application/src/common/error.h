@@ -9,7 +9,9 @@
 
 // Print error
 #define error(message) fprintf(stderr, "%s\n", message)
+#define ferror(format, message) fprintf(stderr, format, message)
 #define e_error(message) error(message); exit(1);
+#define fe_error(format, message) ferror(format, message); exit(1);
 
 // Error messages
 #define INVALID_NUM_ARGS_E "Invalid number of arguments"
