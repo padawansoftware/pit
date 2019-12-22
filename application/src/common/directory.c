@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <libgen.h>
 
 #include "array.h"
 #include "common/common.h"
@@ -81,4 +82,18 @@ array* ls(const char path[]) {
 
 static int sort(const void *a, const void *b) {
     return strcmp(*(const char**)a, *(const char**)b);
+}
+
+char * get_bin_path()
+{
+    char* buff = calloc(100, sizeof(char));
+
+    readlink("/proc/self/exe", buff, 100);
+
+    return buff;
+}
+
+char* get_bin_dir()
+{
+    return dirname(get_bin_path());
 }
