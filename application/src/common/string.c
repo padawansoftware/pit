@@ -16,18 +16,14 @@ char* rasprintf(const char* format, ...)
 
 char* implode(char* glue, char** parts, int partsc)
 {
-    char *result, *tmp;
+    char* result;
 
     if (partsc > 0) {
-        result = (char *) parts[0];
+        result = parts[0];
 
-        for (int i = 1; i < partsc; i++ ) {
-            tmp = rasprintf("%s%s%s", result, glue, parts[i]);
-            free(result);
-            result = tmp;
+        for (int i = 1; i < partsc; i++) {
+            result = rasprintf("%s%s%s", result, glue, parts[i]);
         }
-
-        free(tmp);
 
         return result;
     }
