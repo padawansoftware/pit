@@ -1,7 +1,7 @@
-INSTALL_DIR=/usr/share/pit
+INSTALL_DIR=/usr/share/pit/scripts
 
-# Create directory
-[ -d $INSTALL_DIR ] || mkdir $INSTALL_DIR
+# Create scripts directory
+[ -d $INSTALL_DIR ] || mkdir -p $INSTALL_DIR
 
 # Copy content
 cp -r pit commands $INSTALL_DIR

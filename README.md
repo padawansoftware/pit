@@ -27,7 +27,7 @@ From `pit/scripts` directory
 
 In your `~/.bashrc` include
 ```bash
-source /usr/share/pit/pit
+source /usr/share/pit/scripts/pit
 ```
 
 ## Functionalities

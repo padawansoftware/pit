@@ -1,6 +1,6 @@
 #!/bin/bash
 
-COMMANDS_DIR=/usr/share/pit/commands
+COMMANDS_DIR=/usr/share/pit/scripts/commands
 
 # Check pit is installed
 [ $(command -v pit) ] || exit 1;
