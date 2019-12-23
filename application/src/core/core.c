@@ -28,9 +28,8 @@ int main(int argc, char** argv) {
 
         char* command = argv[1];
         char** arguments = argv + 2;
-        run_command(command, arguments, --argc);
 
-        return 0;
+        return run_command(command, arguments, --argc);
     }
 
     e_error(USAGE);
@@ -60,14 +59,16 @@ bool init(int argc, char** argv) {
  */
 int run_command(char* command, char** arguments, int argumentsc)
 {
+    int result;
     char* commandPath = get_command_path(command);
-
     if (file_exists(commandPath)) {
         char* execCommand = rasprintf("%s %s", commandPath, implode(" ", arguments, argumentsc));
-        system(execCommand);
+        result = system(execCommand);
     } else {
         e_error(rasprintf("Command %s is not installed", command));
     }
+
+    return WEXITSTATUS(result);
 }
 
 /**

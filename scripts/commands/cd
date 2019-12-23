@@ -3,7 +3,7 @@ function cd() {
     if [ $# -gt 0 ]; then
         path=$(pit path find $1);
 
-        if [ $path ]; then command cd $path; return 0; fi
+        if [ $? -eq 0 ]; then command cd $path; return 0; fi
     fi
     command cd $*
 }
