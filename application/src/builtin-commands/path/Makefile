@@ -25,6 +25,9 @@ install:
 
 	install $(BIN_DIRECTORY)/$(BIN) $(INSTALL_DIR)
 
+uninstall:
+	rm -f $(INSTALL_DIR)/$(BIN)
+
 clean:
 	rm $(BIN_DIRECTORY)/$(BIN)
 

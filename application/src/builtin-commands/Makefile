@@ -13,3 +13,7 @@ install:
 all:
 	$(MAKE) all -C cmd
 	$(MAKE) all -C path
+
+uninstall:
+	$(MAKE) uninstall -C cmd
+	$(MAKE) uninstall -C path
