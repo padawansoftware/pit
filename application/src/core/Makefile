@@ -4,9 +4,10 @@ LIB_DIR = ../../lib
 SRCS = core.c
 SRCS += $(COM_DIR)/string.c
 SRCS += $(COM_DIR)/directory.c
-SRCS += $(LIB_DIR)/array.c
 
-LIBS = -I ../ -I ../../lib
+INCLUDES = -I ../
+
+LIBS = -larray
 
 INSTALL_DIR = /usr/share/pit
 
@@ -15,7 +16,7 @@ BIN_DIRECTORY = ../../bin
 BIN = pit
 
 make:
-	gcc $(SRCS) $(LIBS) $(CFLAGS) -o $(BIN_DIRECTORY)/$(BIN)
+	gcc $(SRCS) $(INCLUDES) $(LIBS) $(CFLAGS) -o $(BIN_DIRECTORY)/$(BIN)
 
 install:
 	if [ ! -d $(INSTALL_DIR) ]; then mkdir $(INSTALL_DIR); fi
