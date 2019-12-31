@@ -2,10 +2,10 @@ SRCS = path.c
 SRCS += ../../common/command.c
 SRCS += ../../common/directory.c
 SRCS += ../../common/string.c
-SRCS += ../../../lib/array.c
 
 INCLUDES = -I ../../
-INCLUDES += -I ../../../lib/
+
+LIBS = -larray
 
 BIN_DIRECTORY = ../../../bin
 BIN = pit-path
@@ -18,7 +18,7 @@ FLAGS = -g
 FLAGS += -D _GNU_SOURCE
 
 make:
-	gcc $(SRCS) $(INCLUDES) -o $(BIN_DIRECTORY)/$(BIN) $(FLAGS)
+	gcc $(SRCS) $(INCLUDES) $(LIBS) -o $(BIN_DIRECTORY)/$(BIN) $(FLAGS)
 
 install:
 	if [ ! -d $(INSTALL_DIR) ]; then mkdir $(INSTALL_DIR); fi
