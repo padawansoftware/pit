@@ -1,4 +1,5 @@
 make:
+	$(MAKE) -C lib
 	$(MAKE) -C src/core
 	$(MAKE) -C src/builtin-commands
 
@@ -7,6 +8,7 @@ all: make install clean
 clean:
 	$(MAKE) clean -C src/core
 	$(MAKE) clean -C src/builtin-commands
+	$(MAKE) clean -C lib
 
 install:
 	$(MAKE) install -C src/core

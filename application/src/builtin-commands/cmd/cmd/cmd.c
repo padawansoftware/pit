@@ -7,6 +7,8 @@
 #include "common/common.h"
 #include "common/directory.h"
 #include "common/error.h"
+#include "array.h"
+#include "argv.h"
 
 
 int list_cmd(int argc, char** argv);
@@ -35,10 +37,15 @@ static cmd subcommands[] = {
     {0}
 };
 
+struct argv* parsed_argv;
+char* argv_options = "";
+
 int main(int argc, char** argv) {
     if (--argc) {
         cmd *subcommand = get_command((++argv)[0], subcommands);
         if(subcommand && init()) {
+            parsed_argv = argv_parse(argc, argv, argv_options);
+
             subcommand->run(--argc, ++argv);
 
             return errno;
@@ -65,8 +72,12 @@ int list_cmd(int argc, char** argv) {
 }
 
 int add_cmd(int argc, char** argv) {
-    if (argc == 1) {
-        char*cmdPath = get_command_path(argv[0]);
+    char* commandName,
+        * cmdPath;
+
+    if (array_length(parsed_argv->arguments) == 1) {
+         commandName= argv_get_argument(parsed_argv, 0);
+         cmdPath = get_command_path(commandName);
 
         // Create the file for storing the command
         if (create_file(cmdPath) == 0) {
@@ -87,8 +98,13 @@ int add_cmd(int argc, char** argv) {
 }
 
 int edit_cmd(int argc, char** argv) {
-    if (argc == 1) {
-        char*cmdPath = get_command_path(argv[0]);
+    char* commandName,
+        * cmdPath;
+
+    if (array_length(parsed_argv->arguments) == 1) {
+        commandName = argv_get_argument(parsed_argv, 0);
+        cmdPath = get_command_path(commandName);
+
         if (file_exists(cmdPath) == true) {
             char*openCmd;
             asprintf(&openCmd, "editor %s", cmdPath);
@@ -105,8 +121,12 @@ int edit_cmd(int argc, char** argv) {
 }
 
 int rm_cmd(int argc, char** argv) {
-    if(argc == 1) {
-        char* cmdPath = get_command_path(argv[0]);
+    char* commandName,
+        * cmdPath;
+
+    if(array_length(parsed_argv->arguments) == 1) {
+        commandName = argv_get_argument(parsed_argv, 0);
+        cmdPath = get_command_path(commandName);
 
         if (file_exists(cmdPath) == true) {
             remove_file(cmdPath);

@@ -3,9 +3,14 @@ SRCS += ../../common/command.c
 SRCS += ../../common/directory.c
 SRCS += ../../common/string.c
 
-INCLUDES = -I ../../
+INCLUDES += -I ../../
+INCLUDES += -I ../../../lib/array
+INCLUDES += -I ../../../lib/argv
 
-LIBS = -larray
+LIBS += -L ../../../lib/array
+LIBS += -L ../../../lib/argv
+LIBS += -larray
+LIBS += -largv
 
 BIN_DIRECTORY = ../../../bin
 BIN = pit-path
