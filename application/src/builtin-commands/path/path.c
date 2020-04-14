@@ -24,11 +24,11 @@ typedef struct str_path {
     char path[256];
 } path;
 
-int list_path(int argc, char **argv);
-int find_path(int argc, char **argv);
-int add_path(int argc, char **argv);
-int edit_path(int argc, char **argv);
-int remove_path(int argc, char **argv);
+int list_path();
+int find_path();
+int add_path();
+int edit_path();
+int remove_path();
 
 bool init(void);
 array* get_all_paths(void);
@@ -73,16 +73,14 @@ int main (int argc, char **argv)
     cmd* subcommand;
     char* commandName;
 
-    if (--argc) {
-        commandName = (++argv)[0];
+    parsed_argv = argv_parse(argc, argv, argv_options);
+    if (array_length(parsed_argv->arguments)) {
+        commandName = argv_get_argument(parsed_argv, 0);
         subcommand = get_command(commandName, subcommands);
         if (subcommand) {
             if (init()) {
-                parsed_argv = argv_parse(argc, argv, argv_options);
 
-                subcommand->run(--argc, ++argv);
-
-                return errno;
+                return subcommand->run();
             }
 
             e_error(UNEXP_E);
@@ -102,7 +100,7 @@ bool init(void)
 }
 
 // Subcommands
-int list_path(int argc, char **argv)
+int list_path()
 {
     bool nameOnly = false;
     array *paths;
@@ -116,7 +114,7 @@ int list_path(int argc, char **argv)
     return 0;
 };
 
-int find_path(int argc, char **argv)
+int find_path()
 {
     char* pathName;
     path* p;
@@ -137,7 +135,7 @@ int find_path(int argc, char **argv)
     return 0;
 }
 
-int add_path(int argc, char **argv)
+int add_path()
 {
     char* pathName,
         * pathPath;
@@ -164,7 +162,7 @@ int add_path(int argc, char **argv)
     return 0;
 }
 
-int edit_path(int argc, char **argv)
+int edit_path()
 {
     char* pathName, * pathPath;
     path* p;
@@ -189,7 +187,7 @@ int edit_path(int argc, char **argv)
     }
 }
 
-int remove_path(int argc, char **argv)
+int remove_path()
 {
     char* pathName;
 

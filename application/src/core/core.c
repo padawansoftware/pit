@@ -7,6 +7,8 @@
 #include "common/common.h"
 #include "common/error.h"
 #include "common/directory.h"
+#include "argv.h"
+#include "array.h"
 
 #define USAGE "The pit command improves commands\n" \
         "\n" \
@@ -17,25 +19,26 @@
         "\tcmd      Define commands to automate actions\n" \
         "\texec     Execute a command defined\n" \
 
-bool init(int argc, char** argv);
-int run_command(char* command, char** arguments, int argumentsc);
+bool init();
+int run_command();
 bool command_exists(char* command);
 char* get_command_path(char* command);
 
+struct argv* parsed_argv;
+char* argv_options = "";
+
 int main(int argc, char** argv) {
-    if (--argc) {
-        init(argc, argv);
+    parsed_argv = argv_parse(argc, argv, argv_options);
+    if (array_length(parsed_argv->arguments)) {
+        init();
 
-        char* command = argv[1];
-        char** arguments = argv + 2;
-
-        return run_command(command, arguments, --argc);
+        return run_command();
     }
 
     e_error(USAGE);
 }
 
-bool init(int argc, char** argv) {
+bool init() {
     // Init pit path
     char* PIT_PATH = rasprintf("%s/%s", getenv("HOME"), PIT_DIR);
 
@@ -51,18 +54,16 @@ bool init(int argc, char** argv) {
 
 /**
  * Execute a command
- *
- * @param command The command name
- * @param arguments The arguments passed to the command
- * @argumentsc The number of arguments passed
- *
  */
-int run_command(char* command, char** arguments, int argumentsc)
+int run_command()
 {
     int result;
+
+    char* command = argv_get_argument(parsed_argv, 0);
     char* commandPath = get_command_path(command);
+    array_shift(parsed_argv->arguments);
     if (file_exists(commandPath)) {
-        char* execCommand = rasprintf("%s %s", commandPath, implode(" ", arguments, argumentsc));
+        char* execCommand = rasprintf("%s %s", commandPath, implode(" ", (char**) parsed_argv->arguments->buffer, array_length(parsed_argv->arguments)));
         result = system(execCommand);
     } else {
         e_error(rasprintf("Command %s is not installed", command));

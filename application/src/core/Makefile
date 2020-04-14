@@ -6,9 +6,12 @@ SRCS += $(COM_DIR)/string.c
 SRCS += $(COM_DIR)/directory.c
 
 INCLUDES += -I ../
+INCLUDES += -I ../../lib/argv
 INCLUDES += -I ../../lib/array
 
+LIBS += -L ../../lib/argv
 LIBS += -L ../../lib/array
+LIBS += -largv
 LIBS += -larray
 
 INSTALL_DIR = /usr/share/pit
