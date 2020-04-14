@@ -8,12 +8,13 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "array.h"
 #include "common/common.h"
 #include "common/command.h"
 #include "common/directory.h"
 #include "common/error.h"
 #include "common/string.h"
+#include "array.h"
+#include "argv.h"
 
 typedef struct str_path {
     // path name
@@ -64,6 +65,9 @@ static cmd subcommands[] = {
         { 0 }
 };
 
+struct argv* parsed_argv;
+char* argv_options = "n";
+
 int main (int argc, char **argv)
 {
     cmd* subcommand;
@@ -74,6 +78,8 @@ int main (int argc, char **argv)
         subcommand = get_command(commandName, subcommands);
         if (subcommand) {
             if (init()) {
+                parsed_argv = argv_parse(argc, argv, argv_options);
+
                 subcommand->run(--argc, ++argv);
 
                 return errno;
@@ -101,12 +107,7 @@ int list_path(int argc, char **argv)
     bool nameOnly = false;
     array *paths;
 
-    // Parse options
-    for (int i = 0; i < argc; i++ ) {
-        if (! (strcmp(argv[i], "-n") && strcmp(argv[i], "--name"))) {
-            nameOnly = true;
-        }
-    }
+    nameOnly = argv_has_option(parsed_argv, 'n');
 
     paths = get_all_paths();
     array_sort(paths, sortByName);
@@ -120,8 +121,8 @@ int find_path(int argc, char **argv)
     char* pathName;
     path* p;
 
-    if (argc == 1) {
-        pathName = argv[0];
+    if (array_length(parsed_argv->arguments) == 1) {
+        pathName = argv_get_argument(parsed_argv, 0);
 
         if ((p = retrieve_path(pathName)) != NULL) {
             printf("%s\n", p->path);
@@ -138,12 +139,13 @@ int find_path(int argc, char **argv)
 
 int add_path(int argc, char **argv)
 {
-    char* pathName, * pathPath;
+    char* pathName,
+        * pathPath;
     path p;
 
-    if(argc == 2) {
-        pathName = argv[0];
-        pathPath = argv[1];
+    if(array_length(parsed_argv->arguments) == 2) {
+        pathName = argv_get_argument(parsed_argv, 0);
+        pathPath = argv_get_argument(parsed_argv, 1);
 
         // Check path does not already exist
         if (retrieve_path(pathName) == NULL) {
@@ -167,9 +169,9 @@ int edit_path(int argc, char **argv)
     char* pathName, * pathPath;
     path* p;
 
-    if (argc == 2) {
-        pathName = argv[0];
-        pathPath = argv[1];
+    if (array_length(parsed_argv->arguments)) {
+        pathName = argv_get_argument(parsed_argv, 0);
+        pathPath = argv_get_argument(parsed_argv, 1);;
 
         // Check path exists
         if ((p = retrieve_path(pathName)) != NULL) {
@@ -191,9 +193,8 @@ int remove_path(int argc, char **argv)
 {
     char* pathName;
 
-    if (argc == 1) {
-        pathName = argv[0];
-
+    if (array_length(parsed_argv->arguments)) {
+        pathName = argv_get_argument(parsed_argv, 0);
         rm_by_pathName(pathName);
     } else {
         e_error(INVALID_NUM_ARGS_E "\n" USAGE);

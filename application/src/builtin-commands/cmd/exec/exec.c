@@ -4,6 +4,7 @@
 #include "common/command.h"
 #include "common/directory.h"
 #include "common/error.h"
+#include "argv.h"
 
 #define USAGE "usage: pit exec <cmd>\n" \
         "\n" \
@@ -11,13 +12,20 @@
 
 bool init();
 
-int main(int argc, char** argv) {
-    if (--argc && init()) {
-        // Look for command
-        char* cmd = get_command_path((++argv)[0]);
+struct argv* parsed_argv;
+char* argv_options = "";
 
-        if(file_exists(cmd) == true) {
-            system(cmd);
+int main(int argc, char** argv) {
+    char* commandName,
+        * commandPath;
+
+    parsed_argv = argv_parse(argc, argv, argv_options);
+    if (--argc && init()) {
+        commandName = argv_get_argument(parsed_argv, 0);
+        commandPath = get_command_path(commandName);
+
+        if(file_exists(commandPath) == true) {
+            system(commandPath);
         } else {
             e_error(UNKNOWN_CMD_E);
         }

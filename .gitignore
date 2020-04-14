@@ -2,3 +2,6 @@
 /*.sublime-project
 /*.sublime-workspace
 
+# Object and lib files
+*.o
+*.a
