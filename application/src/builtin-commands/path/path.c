@@ -66,7 +66,9 @@ static cmd subcommands[] = {
 };
 
 struct argv* parsed_argv;
-char* argv_options = "n";
+char* argv_options = "nq";
+
+bool quiet;
 
 int main (int argc, char **argv)
 {
@@ -74,6 +76,8 @@ int main (int argc, char **argv)
     char* commandName;
 
     parsed_argv = argv_parse(argc, argv, argv_options);
+    quiet = argv_has_option(parsed_argv, 'q');
+
     if (array_length(parsed_argv->arguments)) {
         commandName = argv_get_argument(parsed_argv, 0);
         subcommand = get_command(commandName, subcommands);
@@ -124,7 +128,7 @@ int find_path()
 
         if ((p = retrieve_path(pathName)) != NULL) {
             printf("%s\n", p->path);
-        } else {
+        } else if (! quiet) {
             e_error(UNEXISTING_PATH_E);
         }
     } else {
@@ -151,7 +155,7 @@ int add_path()
             strcpy(p.path, realpath(pathPath, NULL));
 
             save_path(&p);
-        } else {
+        } else if (! quiet) {
             e_error(EXISTING_PATH_E);
         }
     } else {
@@ -176,7 +180,7 @@ int edit_path()
             strcpy(p->path, pathPath);
 
             save_path(p);
-        } else {
+        } else if (! quiet) {
             e_error(UNEXISTING_PATH_E);
         }
 
@@ -296,7 +300,7 @@ void rm_by_pathName(char* pathName)
 
     if (file_exists(pathFilepath) == true) {
         remove_file(pathFilepath);
-    } else {
+    } else if (! quiet){
         e_error(UNEXISTING_PATH_E);
     }
 }
