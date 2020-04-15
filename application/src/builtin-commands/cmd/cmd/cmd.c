@@ -37,10 +37,14 @@ static cmd subcommands[] = {
 };
 
 struct argv* parsed_argv;
-char* argv_options = "";
+char* argv_options = "q";
+
+bool quiet;
 
 int main(int argc, char** argv) {
     parsed_argv = argv_parse(argc, argv, argv_options);
+    quiet = argv_has_option(parsed_argv, 'q');
+
     if (array_length(parsed_argv->arguments)) {
         char* subcommandName = argv_get_argument(parsed_argv, 0);
         cmd *subcommand = get_command(subcommandName, subcommands);
@@ -111,7 +115,7 @@ int edit_cmd() {
             system(openCmd);
 
             return 0;
-        } else {
+        } else if (! quiet){
             e_error(UNKNOWN_CMD_E);
         }
     } else {
@@ -130,7 +134,7 @@ int rm_cmd() {
 
         if (file_exists(cmdPath) == true) {
             remove_file(cmdPath);
-        } else {
+        } else if (! quiet){
             e_error(UNKNOWN_CMD_E);
         }
     } else {

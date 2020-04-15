@@ -13,20 +13,23 @@
 bool init();
 
 struct argv* parsed_argv;
-char* argv_options = "";
+char* argv_options = "q";
+
+bool quiet;
 
 int main(int argc, char** argv) {
     char* commandName,
         * commandPath;
 
     parsed_argv = argv_parse(argc, argv, argv_options);
+    quiet = argv_has_option(parsed_argv, 'q');
     if (--argc && init()) {
         commandName = argv_get_argument(parsed_argv, 0);
         commandPath = get_command_path(commandName);
 
         if(file_exists(commandPath) == true) {
             system(commandPath);
-        } else {
+        } else if (! quiet) {
             e_error(UNKNOWN_CMD_E);
         }
 
