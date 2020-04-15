@@ -1,9 +1,9 @@
 # Add command
 function cd() {
     if [ $# -gt 0 ]; then
-        path=$(pit path find $1);
+        path=$(pit path find $1 -q);
 
-        if [ $? -eq 0 ]; then command cd $path; return 0; fi
+        if [ $path ]; then command cd $path; return 0; fi
     fi
     command cd $*
 }
