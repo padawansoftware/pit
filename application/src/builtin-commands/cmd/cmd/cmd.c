@@ -10,11 +10,10 @@
 #include "array.h"
 #include "argv.h"
 
-
-int list_cmd(int argc, char** argv);
-int add_cmd(int argc, char** argv);
-int edit_cmd(int argc, char** argv);
-int rm_cmd(int argc, char** argv);
+int list_cmd();
+int add_cmd();
+int edit_cmd();
+int rm_cmd();
 
 bool init(void);
 
@@ -41,12 +40,13 @@ struct argv* parsed_argv;
 char* argv_options = "";
 
 int main(int argc, char** argv) {
-    if (--argc) {
-        cmd *subcommand = get_command((++argv)[0], subcommands);
+    parsed_argv = argv_parse(argc, argv, argv_options);
+    if (array_length(parsed_argv->arguments)) {
+        char* subcommandName = argv_get_argument(parsed_argv, 0);
+        cmd *subcommand = get_command(subcommandName, subcommands);
         if(subcommand && init()) {
-            parsed_argv = argv_parse(argc, argv, argv_options);
 
-            subcommand->run(--argc, ++argv);
+            subcommand->run();
 
             return errno;
         }
@@ -65,13 +65,13 @@ bool init(void) {
 
 //Subcommmands
 
-int list_cmd(int argc, char** argv) {
+int list_cmd() {
     printd(get_command_dir());
 
     return 0;
 }
 
-int add_cmd(int argc, char** argv) {
+int add_cmd() {
     char* commandName,
         * cmdPath;
 
@@ -97,7 +97,7 @@ int add_cmd(int argc, char** argv) {
     }
 }
 
-int edit_cmd(int argc, char** argv) {
+int edit_cmd() {
     char* commandName,
         * cmdPath;
 
@@ -120,7 +120,7 @@ int edit_cmd(int argc, char** argv) {
     }
 }
 
-int rm_cmd(int argc, char** argv) {
+int rm_cmd() {
     char* commandName,
         * cmdPath;
 

@@ -6,7 +6,7 @@ typedef struct cmd_struct {
     char *name;
 
     // function to invoque
-    int (*run)(int, char **);
+    int (*run)();
 
     // function to init the command
     int (*init)(void);
