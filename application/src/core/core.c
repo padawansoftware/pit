@@ -27,6 +27,9 @@ char* get_command_path(char* command);
 struct argv* parsed_argv;
 char* argv_options = "";
 
+// Turn off error when parsing non defined options
+int opterr = 0;
+
 int main(int argc, char** argv) {
     parsed_argv = argv_parse(argc, argv, argv_options);
     if (array_length(parsed_argv->arguments)) {

@@ -15,6 +15,9 @@ bool init();
 struct argv* parsed_argv;
 char* argv_options = "q";
 
+// Turn off error when parsing non defined options
+int opterr = 0;
+
 bool quiet;
 
 int main(int argc, char** argv) {
