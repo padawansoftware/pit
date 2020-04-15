@@ -1,19 +1,15 @@
 make:
-	$(MAKE) -C cmd
-	$(MAKE) -C path
+	$(MAKE) $(target) -C cmd
+	$(MAKE) $(target) -C path
 
-clean:
-	$(MAKE) clean -C cmd
-	$(MAKE) clean -C path
+clean: target = clean
+clean: make
 
-install:
-	$(MAKE) install -C cmd
-	$(MAKE) install -C path
+install: target = install
+install: make
 
-all:
-	$(MAKE) all -C cmd
-	$(MAKE) all -C path
+all: target = all
+all: make
 
-uninstall:
-	$(MAKE) uninstall -C cmd
-	$(MAKE) uninstall -C path
+uninstall: target = uninstall
+uninstall: make
