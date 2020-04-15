@@ -1,41 +1,28 @@
+SRC_DIR = ../../..
+COMMON_DIR = $(SRC_DIR)/common
+LIB_DIR = $(SRC_DIR)/../lib
+
 SRCS = exec.c
 SRCS += ../core.c
-SRCS += ../../../common/command.c
-SRCS += ../../../common/directory.c
-SRCS += ../../../common/string.c
+SRCS += $(foreach src, command directory string, $(COMMON_DIR)/$(src).c)
 
-INCLUDES = -I ../
-INCLUDES += -I ../../../
-INCLUDES += -I ../../../../lib/array
-INCLUDES += -I ../../../../lib/argv
+LIBS += array
+LIBS += argv
 
-LIBS += -L ../../../../lib/array
-LIBS += -L ../../../../lib/argv
-LIBS += -larray
-LIBS += -largv
+CFLAGS = -I ..
+CFLAGS += -I $(SRC_DIR)
+CFLAGS += $(foreach lib, $(LIBS), -I $(LIB_DIR)/$(lib))
+CFLAGS += -D _GNU_SOURCE
 
-BIN_DIRECTORY = ../../../../bin
+LDFLAGS = $(foreach lib, $(LIBS), -L $(LIB_DIR)/$(lib))
+
+LDLIBS = $(foreach lib, $(LIBS), -l$(lib))
+
 BIN = pit-exec
 
-INSTALL_DIR = /usr/share/pit
-
-# Debug flag
-FLAGS = -g
-# Use GNU extension sources flag
-FLAGS += -D _GNU_SOURCE
 
 make:
-	gcc $(SRCS) $(INCLUDES) $(LIBS) -o $(BIN_DIRECTORY)/$(BIN) $(FLAGS)
-
-install:
-	if [ ! -d $(INSTALL_DIR) ]; then mkdir $(INSTALL_DIR); fi
-
-	install $(BIN_DIRECTORY)/$(BIN) $(INSTALL_DIR)
-
-uninstall:
-	rm -f $(INSTALL_DIR)/$(BIN)
+	gcc $(SRCS) $(CFLAGS) $(LDFLAGS) $(LDLIBS) -o $(BIN)
 
 clean:
-	rm $(BIN_DIRECTORY)/$(BIN)
-
-all: make install clean
+	$(RM) $(BIN)

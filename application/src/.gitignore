@@ -1,0 +1,5 @@
+# Binaries
+core/pit
+builtin-commands/cmd/cmd/pit-cmd
+builtin-commands/cmd/exec/pit-exec
+builtin-commands/path/pit-path

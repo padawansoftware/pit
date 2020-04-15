@@ -1,19 +1,15 @@
 make:
-	$(MAKE) -C lib
-	$(MAKE) -C src/core
-	$(MAKE) -C src/builtin-commands
+	$(MAKE) $(target) -C lib
+	$(MAKE) $(target) -C src/core
+	$(MAKE) $(target) -C src/builtin-commands
+
+clean: target = clean
+clean: make
+
+install: target = install
+install: make
+
+uninstall: target = uninstall
+uninstall: make
 
 all: make install clean
-
-clean:
-	$(MAKE) clean -C src/core
-	$(MAKE) clean -C src/builtin-commands
-	$(MAKE) clean -C lib
-
-install:
-	$(MAKE) install -C src/core
-	$(MAKE) install -C src/builtin-commands
-
-uninstall:
-	$(MAKE) uninstall -C src/core
-	$(MAKE) uninstall -C src/builtin-commands
