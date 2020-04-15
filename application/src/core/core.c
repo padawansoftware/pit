@@ -24,18 +24,9 @@ int run_command();
 bool command_exists(char* command);
 char* get_command_path(char* command);
 
-struct argv* parsed_argv;
-char* argv_options = "";
-
-// Turn off error when parsing non defined options
-int opterr = 0;
-
 int main(int argc, char** argv) {
-    parsed_argv = argv_parse(argc, argv, argv_options);
-    if (array_length(parsed_argv->arguments)) {
-        init();
-
-        return run_command();
+    if (argc > 0 & init()) {
+        return run_command(argc - 1, argv + 1);
     }
 
     e_error(USAGE);
@@ -57,16 +48,21 @@ bool init() {
 
 /**
  * Execute a command
+ *
+ * @param argc Number of arguments without pit program path
+ * @param argv Arguments without pit program path
  */
-int run_command()
+int run_command(int argc, char** argv)
 {
     int result;
 
-    char* command = argv_get_argument(parsed_argv, 0);
+    char* command = argv[0];
     char* commandPath = get_command_path(command);
-    array_shift(parsed_argv->arguments);
     if (file_exists(commandPath)) {
-        char* execCommand = rasprintf("%s %s", commandPath, implode(" ", (char**) parsed_argv->arguments->buffer, array_length(parsed_argv->arguments)));
+        char* execCommand = rasprintf("%s %s",
+            commandPath,
+            implode(" ", argv + 1 , argc -1)
+        );
         result = system(execCommand);
     } else {
         e_error(rasprintf("Command %s is not installed", command));
