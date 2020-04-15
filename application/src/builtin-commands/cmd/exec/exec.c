@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
 
     parsed_argv = argv_parse(argc, argv, argv_options);
     quiet = argv_has_option(parsed_argv, 'q');
-    if (--argc && init()) {
+    if (array_length(parsed_argv->arguments) && init()) {
         commandName = argv_get_argument(parsed_argv, 0);
         commandPath = get_command_path(commandName);
 

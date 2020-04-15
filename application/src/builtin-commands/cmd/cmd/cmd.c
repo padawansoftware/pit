@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
     quiet = argv_has_option(parsed_argv, 'q');
 
     if (array_length(parsed_argv->arguments)) {
-        char* subcommandName = argv_get_argument(parsed_argv, 0);
+        char* subcommandName = array_shift(parsed_argv->arguments);
         cmd *subcommand = get_command(subcommandName, subcommands);
         if(subcommand && init()) {
 
